@@ -1,0 +1,189 @@
+/* 
+    Created on : 20 dic 2023, 15:44:07
+    Author     : gambe
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Open+Sans&family=Sedgwick+Ave+Display&display=swap');
+
+body{
+    background-color:  #333;
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+}
+
+table{
+    border-color: white;
+}
+
+th{
+    color: orangered;
+}
+
+/*menu iniziale*/
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    border-color: white;
+    text-align: center; /* Aggiunto per allineare al centro */
+}
+
+.topnav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.topnav li {
+    display: inline-block; /* Modificato da 'float: left;' */
+}
+
+.topnav a {
+    display: block;
+    padding: 15px;
+    font-style: normal;
+    color: orangered;
+    text-decoration: none;
+    font-size: 30px;
+}
+
+.topnav a:hover {
+    background-color: #000000;
+}
+
+.header{
+    color: orangered;
+    text-align: center;
+    justify-items: stretch;
+    font-size: 35px;
+}
+
+.container{
+    display: flex;
+    justify-content: space-around;
+}
+
+.item{
+    font-size: 20px;
+    padding: 8px;
+}
+
+.item input{
+    font-family: 'Open Sans', sans-serif;
+    border-color: white;
+    color: white;
+    background-color: #333;
+}
+
+.item select{
+    font-family: 'Open Sans', sans-serif;
+    border-color: white;
+    color: white;
+    background-color: #333;
+    font-size: 15px;
+}
+
+.titolo-item{
+    color: orangered;
+}
+
+.element {
+    padding: 10px;
+}
+
+.button{
+    text-align: center;
+}
+
+.button input{
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+    color: orangered;
+    border-color: orangered;
+    background-color: #333;
+}
+
+.button input:hover{
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    border-color: white;
+}
+
+link {
+    text-align: center;
+}
+
+.link a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.link a:hover {
+    color: orangered;
+}
+
+/*Banner scorrevole*/
+#banner{
+    width: 100%;
+    color: orangered;
+    white-space: nowrap; /*serve per gestire gli spazi bianchi e gli a-capo automatici*/
+    overflow: hidden; /*serve per gestire la fuoriuscita del testo del testo a scorrimento (lo nasconde dall'elemento')*/
+}
+
+@keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+/*keyframes è una regola in CSS per gestire le animazioni*/
+/*
+    0%: Gli stili che l'elemento avrà all'inizio dell'animazione (qui, il testo è traslato verso destra del 100% della sua larghezza).
+    100%: Gli stili che l'elemento avrà alla fine dell'animazione (qui, il testo è traslato verso sinistra del 100% della sua larghezza).
+*/
+
+.scrolling-text{
+    font-size: 30px;
+    display: inline-block; /*l'emento scorre su di una linea*/
+    animation: scroll 30s linear infinite;
+}
+
+.logo{
+    max-height: 25%;
+    max-width: 25%;
+}
+
+h3, h1{
+    color: orangered;
+}
+
+.organigramma{
+    max-height: 90%;
+    max-width: 90%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+
+.img-prodotto {
+    height: 200px;
+    width: 200px;
+}
+
+.container-home {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 5px;
+}
