@@ -27,11 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($
         $_SESSION['ruolo'] = $utenti[$username]['ruolo'];
         // Imposta un cookie per ricordare l'utente per un giorno
         setcookie('remember_user', $username, time() + (24 * 60 * 60));
-    }//fine login corretto
-    else{
-        echo "<h1>CREDENZIALI ERRATE: TORNA ALLA PAGINA DI LOGIN</h1>";
-    }
-}
 
 ?>
 <link rel="stylesheet" href="styles/myStyle.css"/>
@@ -138,3 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($
         </div>
     </div>
 </footer>
+<?php
+    }
+    
+    else
+        echo "<h1>CREDENZIALI ERRATE: TORNA ALLA PAGINA DI LOGIN</h1>";
+}
