@@ -1,12 +1,28 @@
 <?php
 /* funzione che stampa la testata html
  */
+session_start();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($_POST['password'])) {
+    // Ottieni le credenziali inserite dall'utente
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-function isAdmin(){
-    if($_SESSION['ruolo']  == 'admin')
+    //print_r($utenti[$username]);
+    if (isset($utenti[$username]) && ($utenti[$username]['password'] == $password)) {
+        // Credenziali corrette, autentica l'utente utilizzando una variabile di sessione
+        $_SESSION['logged_in'] = true;
+        $_SESSION['username'] = $username;
+        $_SESSION['nome'] = $utenti[$username]['nome'];
+        $_SESSION['cognome'] = $utenti[$username]['cognome'];
+        $_SESSION['ruolo'] = $utenti[$username]['ruolo'];
+    }
+}
+
+function isAdmin() {
+    if ($_SESSION['ruolo'] == 'admin')
         echo $string;
-    /*else
-        echo 'Devi essere admin!';*/
+    /* else
+      echo 'Devi essere admin!'; */
 }
 
 function stampa_head($titolo, $css, $classebody = '') {
@@ -41,9 +57,11 @@ function stampa_prodotti($prodotti) {
     echo "<link rel=\"stylesheet\" href=\"./styles/myStyle.css\">";
     $method = $_SERVER['REQUEST_METHOD'];
     echo "<table border = 1 align = \"center\"><tr><th>N.</th><th>NOME</th><th>LINEA</th><th>GUSTO</th><th>TIPO MISCELA</th><th>ACQUISTATA DA</th><th>CALORIE</th><th>COLLABORAZIONE</th>";
-    if ($_SESSION['ruolo'] == 'admin'){echo "<th>IMMAGINE PRODOTTO</th></tr>";}
+    if($_SESSION['ruolo'] == 'admin')
+       echo "<th>IMMAGINE PRODOTTO</th></tr>";
     else
-        echo '</tr>';
+        echo "</tr>";
+    
     $n = 0;
 
     foreach ($prodotti as $i => $info_prodotto) {
@@ -62,7 +80,7 @@ function stampa_prodotti($prodotti) {
             }
         }//gestione del gusto (array interno)
         echo"<td>$stringa_gusto</td>" .
-                "<td class=\"link\"><a href = \"cercaProdotti.php?gassata=$info_prodotto[gassata]\" >$info_prodotto[gassata]</a></td>";
+        "<td class=\"link\"><a href = \"cercaProdotti.php?gassata=$info_prodotto[gassata]\" >$info_prodotto[gassata]</a></td>";
         $classi = $info_prodotto['acquistata'];
         $stringa_classi = '';
         for ($j = 0; $j < count($classi); $j++) {
@@ -73,32 +91,35 @@ function stampa_prodotti($prodotti) {
             }
         }//gestione delle classi (array interno)
 
-        
+
         echo "<td>$stringa_classi</td>"
         . "<td>$info_prodotto[calorie]</td>"
         . "<td>$info_prodotto[collab]</td>";
-        if (!file_exists("images\\" . $info_prodotto['nome'] . ".jpg")) {
-            if ($method == 'POST') {
-                echo "<td><form method = \"post\" action = \"caricaImmagine.php\"  enctype=\"multipart/form-data\">
-                    <input type = \"hidden\" name = \"indice\" value = \"$info_prodotto[indice]\"  accept=\"image/*\"/>
-                    <input type = \"file\" name= \"fileprodotto\" />
-                    <input type = \"submit\" name= \"carica\" value = \"Carica\" />
-                    </form>
-                    </td>";
-            } else {
-                echo "<td><form method = \"get\" action = \"caricaImmagine.php\"  enctype=\"multipart/form-data\">
-                    <input type = \"hidden\" name = \"indice\" value = \"$info_prodotto[indice]\" accept=\"image/*\"/>
-                    <input type = \"file\" name= \"fileprodotto\" />
-                    <input type = \"submit\" name= \"carica\" value = \"Carica\" />
-                    </form>
-                    </td>";
+        
+        if ($_SESSION['ruolo'] == 'admin') {
+            // Verifica se l'immagine del prodotto esiste prima di stampare la colonna
+            if (!file_exists("images\\" . $info_prodotto['nome'] . ".jpg")) {
+                if ($method == 'POST') {
+                    echo "<td><form method = \"post\" action = \"caricaImmagine.php\"  enctype=\"multipart/form-data\">
+                        <input type = \"hidden\" name = \"indice\" value = \"$info_prodotto[indice]\"  accept=\"image/*\"/>
+                        <input type = \"file\" name= \"fileprodotto\" />
+                        <input type = \"submit\" name= \"carica\" value = \"Carica\" />
+                        </form>
+                        </td>";
+                } else {
+                    echo "<td><form method = \"get\" action = \"caricaImmagine.php\"  enctype=\"multipart/form-data\">
+                        <input type = \"hidden\" name = \"indice\" value = \"$info_prodotto[indice]\" accept=\"image/*\"/>
+                        <input type = \"file\" name= \"fileprodotto\" />
+                        <input type = \"submit\" name= \"carica\" value = \"Carica\" />
+                        </form>
+                        </td>";
                 }
-        } else {
-            echo "<td><a href = \"dettagliProdotto.php?indice=$info_prodotto[indice]\" >Info Prodotto</a></td>\n";
+            } else {
+                echo "<td><a href = \"dettagliProdotto.php?indice=$info_prodotto[indice]\" >Info Prodotto</a></td>\n";
+            }
         }
     }
-    
-        
+
 //tabella stampata in modo completo
     echo "</table>";
 }
@@ -111,10 +132,9 @@ function calorie_inferiori($prodotti, $valore_calorie) {
             $risultati[] = $dettaglioProdotto;
         }
     }
-    
+
     return $risultati;
 }
-
 
 function stampa_bfdrinks() {
     include './include/funzioni.inc';
@@ -172,8 +192,8 @@ function stampa_bfdrinks() {
 
                 <div class="element">    
                     <span class="titolo-item">Gusti </span>
-                    <select name='gusto' value='Scegli gusto'>
-                        <option value="">Scegli gusto</option>
+                    <select name='gusto'>
+                        <option value="" selected>Scegli gusto</option>
                         <?php
                         for ($i = 0; $i < count($gusti); $i++) {
                             echo"<option value=\"$gusti[$i]\">$gusti[$i]</option>";
@@ -199,7 +219,8 @@ function stampa_bfdrinks() {
 
                 <div class="element"> 
                     <span class="titolo-item">Collaborazioni </span>
-                    <select name='collab' value='Scegli collaborazione'>
+                    <select name='collab'>
+                        <option value=''>Scegli collaborazione</option>
                         <?php
                         echo "<option value=\"\">Scegli collaborazione</option>";
                         echo "<option value=\"#N/D\">Nessuna</option>"; //aggiunta opzione per i prod senza collab
@@ -207,24 +228,24 @@ function stampa_bfdrinks() {
                             echo"<option value=\"$collab[$i]\">$collab[$i]</option>";
                         }
                         ?>
-                </select>
+                    </select>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="button">
-        <input type="submit" value="Invio">
-        <input type="reset" value="Reset">
-    </div>
-</form>
-<br>
-
-
-<footer>
-    <div id="banner">
-        <div class="scrolling-text">
-            Dal Belluzzi per il Belluzzi, BF Drinks ti fa stare attento ad ogni lezione!
+        <div class="button">
+            <input type="submit" value="Invio">
+            <input type="reset" value="Reset">
         </div>
-    </div>
-</footer>
-<?php
+    </form>
+    <br>
+
+
+    <footer>
+        <div id="banner">
+            <div class="scrolling-text">
+                Dal Belluzzi per il Belluzzi, BF Drinks ti fa stare attento ad ogni lezione!
+            </div>
+        </div>
+    </footer>
+    <?php
 }
